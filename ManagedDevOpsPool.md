@@ -17,16 +17,20 @@ Run the following command replacing the bracketed values with your own values.
 az group create --name MdpDemo --location westus
 az deployment group create --group MdpDemo -u https://github.com/hawkinswinja/crudappautomation/blob/master/infra/modules/mdp.bicep
 ```
-Enter values for organizationUrl (azure devops organization url) and ProjectName (Existing Project in your organization) and wait for completion.
+Enter values for organizationUrl (azure devops organization url) and ProjectName (Existing Project in your organization,eg, Minicommerce) and wait for completion.
+This creates an agent pool named (ProjectName-agentpool) eg Minicommerce-agentpool
 
-Verify the agentpool is created in your project settings under the agent pools blade. Currently no agents are present as these are created on demand.
+Verify the agentpool is created in your project settings under the agent pools blade.
 
-Trigger a pipeline with the pool set to the name of the agent pool. The initialize process will automatically make a request to azure to provision an agent vm for use. See below.
+![Agent pool created](./screenshots/mdp-created.png)
 
-[Initialize agent process]()
+Trigger a pipeline with the pool set to the name of the agent pool. The initialize process will automatically make a request to azure to provision an agent for use. 
+See below. Notice the pool name
+
+![Acquiring agent from azure](./screenshots/requesting-agent.png)
 
 Depending on the Agent SKU, The template uses standard B2ms which is burstable, hence takes ~5mins to provision.
 
-[Agent acquired and running]()
+![Agent provisioned](./screenshots/provisioned-agent.png)
 
-Azure will autoprovison the resource once the pipeline is complete and no other jobs are in queue, helping to save on cost.
+Azure will deprovison the resource once the pipeline is complete and no other jobs are in queue, helping to save on cost.
