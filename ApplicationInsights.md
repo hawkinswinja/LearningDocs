@@ -42,13 +42,20 @@ app.Run();
 ```
 4. Run the application and query successful and non existing endpoints to simulate failure.
 
-   ![Successful Request](/screenshots/appinsights/overview.png)
+   ![Successful Request](/screenshots/appinsights/swagger.png)
    
 You can use an application of any language available in this [step by step guide](https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-enable?tabs=aspnetcore#enable-opentelemetry-with-application-insights)
 
 ## Monitoring Data from Application Insights
 Visit the applications insights overview and verify activity on the dashboards.
 
-![Application Insights Dashboard](/screenshots/appinsights/overview.png)
+![Application Insights Dashboard](/screenshots/appinsights/appinsights.png)
+
+The transaction search feature under investigate provides tracing telemetry as well
+
+![Application Insights Traces](/screenshots/appinsights/tracing.png)
+
+Application Insights provide more capabilities for interacting with metrics, traces and logs. Dive deep into these features including Live metrics, application map, availaility, performance, query logs and transaction search for traces.
+[Interact with Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview)
 
 
