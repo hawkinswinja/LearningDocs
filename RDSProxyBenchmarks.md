@@ -70,33 +70,36 @@ To compare performance, we ran benchmarks using `mysqlslap` with varying concurr
 ### Test Setup
 
 - **Tool**: mysqlslap
-- **Concurrency**: 500 connections
-- **Queries**: Simple SELECT statements
-- **Duration**: 60 seconds per test
-- **Environment**: Same VPC, instance types, etc.
+- **Concurrency**: target 500 connections
+- **Queries**: Simple SELECT statement
+- **Environment**: Same VPC, Same RDS instance, Same jumpserver running mysqlslap script.
 
 ### Results
 
-#### Direct RDS Endpoint
+#### Aurora MySQL t4g.large maximum connections hard limit
 
-- Average Response Time: X ms
-- Throughput: Y queries/sec
-- Connection Errors: Z
+![Instance max connections is 135](/screenshots/rdsproxy/instance-max-connections.png)
 
-![Direct RDS Benchmark](images/direct-rds-benchmark.png)
+#### RDS Endpoint with 200 concurrent connections
 
-#### RDS Proxy Endpoint
+![Extra connections error](/screenshots/rdsproxy/rds-endpoint-too-many-connections.png)
 
-- Average Response Time: A ms
-- Throughput: B queries/sec
-- Connection Errors: C
+![RDS Benchmark results](/screenshots/rdsproxy/rds-enpoint-200-connections.png)
 
-![RDS Proxy Benchmark](images/rds-proxy-benchmark.png)
 
-### Analysis
-The hard limit for max_connections for our t4g.large instance as shown is 135. Basically, the database can gracefully handle 100 connections. However the moment we increase this to 200, we start seeing database connection errors for the extra connections.   
+#### RDS Proxy Endpoint with 200 concurrent connections
 
-The RDS Proxy does not drop connections even when we 5x the number of concurrent connections (500) and double the iteration. This demonstrates how the proxy can [benefit] applications under high concurrency as was the case with our ECS scenario.
+![RDS Proxy Benchmark with 200 connections](/screenshots/rdsproxy/rds-proxy-200-connections.png) 
+
+#### RDS Proxy Endpoint with 500 concurrent connections
+
+![RDS Proxy Benchmark with 500 connections](/screenshots/rdsproxy/rds-proxy-500-connections.png)
+
+
+The hard limit for max_connections for our t4g.large instance as shown is 135. Basically, the database can gracefully handle upto 135 connections. However the moment we increase this to 200, we start seeing `Too many connection` errors for the surplus.   
+
+The RDS Proxy does not drop connections. However, notice the average number of seconds is slightly higher as compared to when using the rds endpoint directly.
+Even when we 5x the number of concurrent connections (500) and double the iteration, the proxy still successfully handles the connections. This demonstrates how the proxy can [benefit] applications under high concurrency as was the case with our ECS scenario.
 
 ## References
 - [Amazon RDS Proxy Documentation](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.html)
